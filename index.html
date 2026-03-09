@@ -850,19 +850,25 @@ body { transition: background-color 0.7s ease; }
   let userStats = null;
 
   // Load user stats if logged in
-  const token = localStorage.getItem("astrofit_token");
+const token = localStorage.getItem("astrofit_token");
 if (token) {
   fetch(`${COACH_API}/api/astrofit/profile`, {
     headers: { Authorization: `Bearer ${token}` }
   })
   .then(r => r.json())
   .then(data => {
-    document.getElementById("loginLink").style.display = "none";
+    const loginLink = document.getElementById("loginLink");
     const userEl = document.getElementById("loggedInUser");
-    userEl.style.display = "inline";
-    userEl.textContent = `✦ ${data.name}`;
+    
+    if (loginLink) loginLink.style.display = "none";
+    if (userEl) {
+      userEl.style.display = "inline";
+      userEl.textContent = `✦ ${data.name}`;
+    }
   })
-  .catch(() => {});
+  .catch(error => {
+    console.error('Profile fetch error:', error);
+  });
 }
 </script>
 
