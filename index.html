@@ -824,7 +824,318 @@ body { transition: background-color 0.7s ease; }
   nav { padding: 12px 20px; }
   .nav-links { display: none; }
 }
-  
+
+/* ============================================================
+   CHATBOT WIDGET
+   ============================================================ */
+#chatbot-widget {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 8888;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+/* Toggle button */
+#chatbot-toggle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet) 0%, var(--gold) 100%);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 4px 24px rgba(201,168,76,0.35), 0 0 0 1px rgba(201,168,76,0.2);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+#chatbot-toggle:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 32px rgba(201,168,76,0.5), 0 0 0 2px rgba(201,168,76,0.3);
+}
+#chatbot-toggle::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--gold) 0deg,
+    var(--violet-light) 90deg,
+    transparent 180deg,
+    var(--gold) 360deg
+  );
+  animation: chatbotOrbit 3s linear infinite;
+  z-index: -1;
+  opacity: 0.6;
+}
+@keyframes chatbotOrbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Chat panel */
+#chatbot-panel {
+  width: 360px;
+  height: 520px;
+  background: rgba(6,6,16,0.92);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow:
+    0 8px 48px rgba(0,0,0,0.7),
+    0 0 0 1px rgba(201,168,76,0.08),
+    inset 0 1px 0 rgba(201,168,76,0.1);
+  backdrop-filter: blur(24px);
+  transform-origin: bottom right;
+  animation: chatbotOpen 0.28s cubic-bezier(0.34,1.56,0.64,1) both;
+  position: relative;
+}
+#chatbot-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(135deg,
+    rgba(201,168,76,0.4) 0%,
+    rgba(176,127,224,0.2) 40%,
+    rgba(201,168,76,0.1) 70%,
+    rgba(176,127,224,0.4) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  animation: chatbotBorderSpin 6s linear infinite;
+  pointer-events: none;
+}
+@keyframes chatbotBorderSpin {
+  from { background-position: 0% 50%; }
+  to   { background-position: 100% 50%; }
+}
+@keyframes chatbotOpen {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+#chatbot-panel.chatbot-hidden {
+  display: none;
+}
+
+/* Header */
+#chatbot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: rgba(201,168,76,0.07);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  flex-shrink: 0;
+}
+#chatbot-header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+#chatbot-header-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet), var(--gold));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+#chatbot-header-text h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+#chatbot-header-text p {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0;
+}
+#chatbot-close {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
+  line-height: 1;
+}
+#chatbot-close:hover {
+  color: var(--gold);
+  background: rgba(201,168,76,0.1);
+}
+
+/* Messages */
+#chatbot-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,168,76,0.2) transparent;
+}
+#chatbot-messages::-webkit-scrollbar { width: 4px; }
+#chatbot-messages::-webkit-scrollbar-track { background: transparent; }
+#chatbot-messages::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 4px; }
+
+.chatbot-msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 88%;
+  animation: chatMsgIn 0.2s ease both;
+}
+@keyframes chatMsgIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.chatbot-msg.bot { align-self: flex-start; }
+.chatbot-msg.user { align-self: flex-end; }
+
+.chatbot-msg-bubble {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  word-break: break-word;
+}
+.chatbot-msg.bot .chatbot-msg-bubble {
+  background: rgba(176,127,224,0.1);
+  border: 1px solid rgba(176,127,224,0.2);
+  color: var(--text);
+  border-radius: 4px 12px 12px 12px;
+}
+.chatbot-msg.user .chatbot-msg-bubble {
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.25);
+  color: var(--text);
+  border-radius: 12px 4px 12px 12px;
+}
+.chatbot-msg-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.chatbot-msg.user .chatbot-msg-label { text-align: right; }
+
+/* Typing indicator */
+.chatbot-typing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px;
+  background: rgba(176,127,224,0.08);
+  border: 1px solid rgba(176,127,224,0.15);
+  border-radius: 4px 12px 12px 12px;
+  align-self: flex-start;
+  max-width: 70px;
+}
+.chatbot-typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--violet-light);
+  animation: chatbotDot 1.2s ease-in-out infinite;
+}
+.chatbot-typing span:nth-child(2) { animation-delay: 0.2s; }
+.chatbot-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes chatbotDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* Input area */
+#chatbot-input-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(201,168,76,0.12);
+  background: rgba(6,6,16,0.6);
+  flex-shrink: 0;
+}
+#chatbot-input {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  resize: none;
+}
+#chatbot-input::placeholder { color: rgba(184,180,204,0.4); }
+#chatbot-input:focus {
+  border-color: rgba(201,168,76,0.4);
+  background: rgba(201,168,76,0.04);
+}
+#chatbot-send {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--violet) 0%, var(--gold) 100%);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  flex-shrink: 0;
+}
+#chatbot-send:hover {
+  transform: scale(1.06);
+  box-shadow: 0 4px 12px rgba(201,168,76,0.3);
+}
+#chatbot-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Chatbot hint stars */
+#chatbot-hint {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 6px 16px 10px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  #chatbot-panel { width: calc(100vw - 32px); }
+  #chatbot-widget { bottom: 16px; right: 16px; }
+}
 </style>
 </head>
 <body>
@@ -2272,6 +2583,233 @@ checkBadges();
 
 // Welcome toast
 setTimeout(() => showToast('✦', 'Welcome to AstroFit', 'Complete quests to earn badges & XP'), 1500);
+</script>
+
+<!-- ============================================================
+     CHATBOT WIDGET
+     ============================================================ -->
+<div id="chatbot-widget">
+  <!-- Chat panel -->
+  <div id="chatbot-panel" class="chatbot-hidden" role="dialog" aria-label="AstroFit Assistant" aria-live="polite">
+    <!-- Header -->
+    <div id="chatbot-header">
+      <div id="chatbot-header-title">
+        <div id="chatbot-header-icon">✦</div>
+        <div id="chatbot-header-text">
+          <h4>AstroFit Assistant</h4>
+          <p>Cosmic Fitness Guide</p>
+        </div>
+      </div>
+      <button id="chatbot-close" aria-label="Close chatbot" onclick="chatbotClose()">✕</button>
+    </div>
+
+    <!-- Messages -->
+    <div id="chatbot-messages" aria-label="Chat messages"></div>
+
+    <!-- Hint -->
+    <div id="chatbot-hint">✦ Ask about workouts, zodiac plans, or lunar phases ✦</div>
+
+    <!-- Input -->
+    <div id="chatbot-input-area">
+      <input
+        id="chatbot-input"
+        type="text"
+        placeholder="Ask AstroFit anything…"
+        aria-label="Chat message input"
+        maxlength="500"
+        autocomplete="off"
+      />
+      <button id="chatbot-send" aria-label="Send message" onclick="chatbotSend()">➤</button>
+    </div>
+  </div>
+
+  <!-- Floating toggle button -->
+  <button id="chatbot-toggle" aria-label="Open AstroFit chatbot" onclick="chatbotToggle()">✦</button>
+</div>
+
+<script>
+// ============================================================
+// CHATBOT — AstroFit AI Assistant (Hugging Face free API)
+// ============================================================
+
+// ⚠️  Replace with your free Hugging Face token from https://huggingface.co/settings/tokens
+const CHATBOT_HF_TOKEN = "hf_YOUR_HUGGING_FACE_TOKEN";
+const CHATBOT_MODEL_URL = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta";
+
+const CHATBOT_SYSTEM = `You are AstroFit's AI assistant — a knowledgeable, warm, and concise guide for a fitness platform that blends astrology with personal training.
+
+You help users with:
+- How to use AstroFit features (workouts, energy dial, zodiac plans, lunar phase training, planet protocols, rewards & XP)
+- Fitness advice tailored to zodiac signs and cosmic energy levels
+- Astrology basics as they relate to health, motivation, and recovery
+- Workout recommendations, form tips, and recovery guidance
+
+Keep responses under 120 words. Be encouraging, precise, and occasionally reference cosmic/celestial themes. Never make medical diagnoses.`;
+
+const chatbotState = {
+  open: false,
+  loading: false,
+  history: []
+};
+
+function chatbotToggle() {
+  chatbotState.open ? chatbotClose() : chatbotOpen();
+}
+
+function chatbotOpen() {
+  chatbotState.open = true;
+  const panel = document.getElementById('chatbot-panel');
+  panel.classList.remove('chatbot-hidden');
+  panel.style.animation = 'chatbotOpen 0.28s cubic-bezier(0.34,1.56,0.64,1) both';
+  document.getElementById('chatbot-toggle').setAttribute('aria-label', 'Close AstroFit chatbot');
+
+  // Show welcome message on first open
+  const msgs = document.getElementById('chatbot-messages');
+  if (!msgs.children.length) {
+    chatbotAppendMsg('bot', 'Greetings, cosmic traveller ✦ I\'m your AstroFit guide. Ask me about workouts, your zodiac training plan, lunar phases, or how to navigate the platform!');
+  }
+  setTimeout(() => document.getElementById('chatbot-input').focus(), 50);
+}
+
+function chatbotClose() {
+  chatbotState.open = false;
+  document.getElementById('chatbot-panel').classList.add('chatbot-hidden');
+  document.getElementById('chatbot-toggle').setAttribute('aria-label', 'Open AstroFit chatbot');
+}
+
+function chatbotAppendMsg(role, text) {
+  const msgs = document.getElementById('chatbot-messages');
+
+  const wrap = document.createElement('div');
+  wrap.className = 'chatbot-msg ' + role;
+
+  const label = document.createElement('div');
+  label.className = 'chatbot-msg-label';
+  label.textContent = role === 'bot' ? '✦ AstroFit' : 'You';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'chatbot-msg-bubble';
+  bubble.textContent = text;
+
+  wrap.appendChild(label);
+  wrap.appendChild(bubble);
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+  return wrap;
+}
+
+function chatbotShowTyping() {
+  const msgs = document.getElementById('chatbot-messages');
+  const typing = document.createElement('div');
+  typing.className = 'chatbot-typing';
+  typing.id = 'chatbot-typing-indicator';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function chatbotHideTyping() {
+  const el = document.getElementById('chatbot-typing-indicator');
+  if (el) el.remove();
+}
+
+async function chatbotSend() {
+  if (chatbotState.loading) return;
+
+  const input = document.getElementById('chatbot-input');
+  const sendBtn = document.getElementById('chatbot-send');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  chatbotAppendMsg('user', text);
+  chatbotState.history.push({ role: 'user', content: text });
+
+  // Keep history to last 20 messages (10 user/bot exchanges) to stay within token limits
+  if (chatbotState.history.length > 20) {
+    chatbotState.history = chatbotState.history.slice(-20);
+  }
+
+  chatbotState.loading = true;
+  sendBtn.disabled = true;
+  input.disabled = true;
+  chatbotShowTyping();
+
+  try {
+    // Build prompt in ChatML / instruction format used by Zephyr
+    const conversationPrompt = chatbotState.history.slice(0, -1).reduce((acc, msg) => {
+      return acc + (msg.role === 'user' ? `<|user|>\n${msg.content}\n` : `<|assistant|>\n${msg.content}\n`);
+    }, `<|system|>\n${CHATBOT_SYSTEM}\n`);
+    const fullPrompt = conversationPrompt + `<|user|>\n${text}\n<|assistant|>\n`;
+
+    const response = await fetch(CHATBOT_MODEL_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${CHATBOT_HF_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        inputs: fullPrompt,
+        parameters: {
+          max_new_tokens: 156,
+          temperature: 0.7,
+          return_full_text: false,
+          stop: ['<|user|>', '<|system|>']
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error || `API error ${response.status}`);
+    }
+
+    const data = await response.json();
+    let botReply = '';
+    if (Array.isArray(data) && data[0] && data[0].generated_text) {
+      botReply = data[0].generated_text.trim();
+    } else if (data.generated_text) {
+      botReply = data.generated_text.trim();
+    }
+
+    // Strip any trailing stop tokens that may have leaked through
+    botReply = botReply.replace(/<\|user\|>[\s\S]*/g, '').replace(/<\|system\|>[\s\S]*/g, '').trim();
+
+    if (!botReply) botReply = 'The stars are momentarily silent — please rephrase your question and I\'ll channel the cosmos again.';
+
+    chatbotHideTyping();
+    chatbotAppendMsg('bot', botReply);
+    chatbotState.history.push({ role: 'assistant', content: botReply });
+
+  } catch (err) {
+    console.error('[AstroFit Chatbot]', err);
+    chatbotHideTyping();
+
+    let friendly = 'A cosmic disruption occurred. ';
+    if (!CHATBOT_HF_TOKEN || CHATBOT_HF_TOKEN === 'hf_YOUR_HUGGING_FACE_TOKEN') {
+      friendly += 'Please add your free Hugging Face API token in the chatbot script (CHATBOT_HF_TOKEN) to activate the AI.';
+    } else if (err.message.includes('loading')) {
+      friendly += 'The AI model is warming up — please try again in 20 seconds.';
+    } else {
+      friendly += 'Please check your API token or try again shortly.';
+    }
+
+    chatbotAppendMsg('bot', friendly);
+  } finally {
+    chatbotState.loading = false;
+    sendBtn.disabled = false;
+    input.disabled = false;
+    input.focus();
+  }
+}
+
+// Enter key support
+document.getElementById('chatbot-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    chatbotSend();
+  }
+});
 </script>
 </body>
 </html>
