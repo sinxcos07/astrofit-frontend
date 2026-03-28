@@ -38,7 +38,7 @@ body { background:var(--bg); color:var(--text); font-family:'Roboto',sans-serif;
 #stars-canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
 
 /* NAV */
-nav { position:fixed; top:0; left:0; right:0; width:100%; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:18px 48px; backdrop-filter:blur(24px); border-bottom:1px solid var(--border); background:rgba(6,6,16,0.7); transition:background 0.3s; }
+nav { position:fixed; top:0; left:0; right:0; width:100%; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:14px 48px; backdrop-filter:blur(24px); border-bottom:1px solid var(--border); background:rgba(6,6,16,0.7); transition:background 0.3s; }
 .nav-logo { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; letter-spacing:0.1em; color:var(--gold); cursor:none; }
 .nav-logo span { font-style:italic; color:var(--text); }
 .nav-links { display:flex; gap:28px; list-style:none; flex:1; justify-content:center; }
@@ -48,7 +48,7 @@ nav { position:fixed; top:0; left:0; right:0; width:100%; z-index:200; display:f
 .nav-cta:hover { background:var(--gold-light); transform:translateY(-1px); }
 
 /* TICKER */
-.ticker-wrap { overflow:hidden; border-bottom:1px solid var(--border); padding:16px 0; background:var(--bg2); margin-top:76px; width:100%; }
+.ticker-wrap { overflow:hidden; border-bottom:1px solid var(--border); padding:16px 0; background:var(--bg2); margin-top:57px; width:100%; }
 .ticker-track { display:flex; animation:ticker 30s linear infinite; white-space:nowrap; }
 .ticker-item { display:flex; align-items:center; gap:20px; padding:0 28px; font-size:0.68rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-dim); flex-shrink:0; }
 .ticker-item .dot { width:4px; height:4px; border-radius:50%; background:var(--gold); }
@@ -729,8 +729,11 @@ body { transition: background-color 0.7s ease; }
 .eh-day { font-size: 0.5rem; color: var(--text-dim); letter-spacing: 0.08em; }
 
 /* Planet detail panel CSS */
+.pd-inner-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; }
+@media(max-width:768px) { .pd-inner-grid { grid-template-columns:1fr; gap:24px; } #planet-detail { padding:24px; } }
 .planet-cta-hint { font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim); margin-top:8px; opacity:0; transition:opacity 0.2s; }
 .planet-row:hover .planet-cta-hint { opacity:1; color:var(--gold); }
+@media(max-width:768px) { .planet-cta-hint { opacity:1; color:var(--gold); } }
 
 /* Yoga pose SVG illustrations */
 
@@ -749,13 +752,17 @@ body { transition: background-color 0.7s ease; }
   input[type="text"], input[type="email"], input[type="password"], input[type="date"] { font-size: 16px !important; padding: 12px; }
   button, .btn { min-height: 44px; }
   /* Fix ticker margin on small phones */
-  .ticker-wrap { margin-top: 50px; }
+  .ticker-wrap { margin-top: 56px; }
   /* Fix hero */
-  .hero { padding-top: 76px; padding-bottom: 50px; padding-left: 16px; padding-right: 16px; text-align: center; align-items: center; }
+  .hero { padding-top: 72px; padding-bottom: 80px; padding-left: 16px; padding-right: 16px; text-align: center; align-items: center; }
   /* Fix Scroll to Explore: force center */
   .hero-scroll { left: 50% !important; right: auto !important; transform: translateX(-50%) !important; align-items: center; }
   /* Challenges: 2 per row on mobile */
   .fc-challenges-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
+  /* Add bottom padding so fixed daily-bar doesn't cover content */
+  body { padding-bottom: 70px; }
+  /* Ensure challenge cards are fully visible */
+  .fitchallenge-section { padding-bottom: 24px; }
   /* Stats: smaller gap, no dividers */
   .hero-counts { gap: 16px; justify-content: center; width: 100%; }
   .hc-div { display: none; }
@@ -1301,46 +1308,61 @@ body { transition: background-color 0.7s ease; }
 <section class="section-wrap planet-section" id="planets">
   <div class="planet-inner">
     <div style="max-width:1200px;margin:0 auto 56px;">
-      <p class="section-label reveal">✦ The Nine</p>
+      <p class="section-label reveal">✦ The Nine Planets</p>
       <h2 class="section-title reveal reveal-delay-1">Planet-Powered<br><em>Training Modes</em></h2>
       <p class="section-body reveal reveal-delay-2" style="color:#c8c4dc;">Each planet in your birth chart governs a different aspect of fitness. Tap any planet to activate its training protocol and learn how celestial forces shape your workout.</p>
     </div>
     <div style="max-width:1200px;margin:0 auto;">
-    <div class="planet-row" onclick="activatePlanet(this,'Mars','♂','#e05c7a','Power Surge Mode','Maximum explosive intensity. Compound lifts, battle ropes, sprints. Channel raw aggression into every rep. No rest for the warrior planet.','Barbell deadlifts · Battle ropes · Box jumps · Sprint intervals · Heavy compound sets')">
-      <div><div class="planet-nm" style="color:#e05c7a;">Mars<span class="planet-sym">♂</span></div><div class="planet-rules">Rules: Drive & Muscles</div></div>
+    <div class="planet-row" onclick="activatePlanetByKey(this,'mars')">
+      <div><div class="planet-nm" style="color:#e05c7a;">Mars<span class="planet-sym">&#9794;</span></div><div class="planet-rules">Rules: Drive &amp; Muscles</div></div>
       <div><div class="planet-wkt-name">Power Surge Mode</div><div class="planet-wkt-desc" style="color:#c8c4dc;">Maximum intensity, compound lifts, battle ropes, explosiveness. Mars demands nothing less than your absolute maximum.</div></div>
-      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><span class="int-label">5/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate →</div></div>
+      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><span class="int-label">5/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate &#8594;</div></div>
     </div>
-    <div class="planet-row" onclick="activatePlanet(this,'Venus','♀','#e8c97a','Flow & Restore','Grace over force. Barre, slow yoga flows, foam rolling rituals. Beauty is the goal — move with intention and let recovery become an art form.','Barre class · Yin yoga · Foam rolling · Face yoga · Gentle Pilates')">
-      <div><div class="planet-nm" style="color:#e8c97a;">Venus<span class="planet-sym">♀</span></div><div class="planet-rules">Rules: Grace & Recovery</div></div>
-      <div><div class="planet-wkt-name">Flow & Restore</div><div class="planet-wkt-desc" style="color:#c8c4dc;">Barre, slow yoga flows, foam rolling rituals, aesthetic movement. Venus transforms recovery into ritual.</div></div>
-      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot"></div><div class="idot"></div><div class="idot"></div><span class="int-label">2/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate →</div></div>
+    <div class="planet-row" onclick="activatePlanetByKey(this,'venus')">
+      <div><div class="planet-nm" style="color:#e8c97a;">Venus<span class="planet-sym">&#9792;</span></div><div class="planet-rules">Rules: Grace &amp; Recovery</div></div>
+      <div><div class="planet-wkt-name">Flow &amp; Restore</div><div class="planet-wkt-desc" style="color:#c8c4dc;">Barre, slow yoga flows, foam rolling rituals, aesthetic movement. Venus transforms recovery into ritual.</div></div>
+      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot"></div><div class="idot"></div><div class="idot"></div><span class="int-label">2/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate &#8594;</div></div>
     </div>
-    <div class="planet-row" onclick="activatePlanet(this,'Sun','☉','#f0a040','Radiant Core Protocol','Shine from your center outward. Core work, spine alignment, posture training. The Sun demands you stand tall in your power.','Pilates core series · Spine articulation · Posture holds · Plank variations · Back extensions')">
-      <div><div class="planet-nm" style="color:#f0a040;">Sun<span class="planet-sym">☉</span></div><div class="planet-rules">Rules: Vitality & Core</div></div>
+    <div class="planet-row" onclick="activatePlanetByKey(this,'sun')">
+      <div><div class="planet-nm" style="color:#f0a040;">Sun<span class="planet-sym">&#9737;</span></div><div class="planet-rules">Rules: Vitality &amp; Core</div></div>
       <div><div class="planet-wkt-name">Radiant Core Protocol</div><div class="planet-wkt-desc" style="color:#c8c4dc;">Core work, spine alignment, posture training. The Sun demands you stand tall and radiate strength from your center.</div></div>
-      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot"></div><div class="idot"></div><span class="int-label">3/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate →</div></div>
+      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot"></div><div class="idot"></div><span class="int-label">3/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate &#8594;</div></div>
     </div>
-    <div class="planet-row" onclick="activatePlanet(this,'Moon','☽','#b07fe0','Cyclical Training','Honor your body's lunar rhythm. Intensity adapts weekly — build during waxing, peak at full, restore during waning. Work with your cycle, not against it.','Week 1: light mobility · Week 2: building strength · Week 3: peak intensity · Week 4: deload & restore')">
-      <div><div class="planet-nm" style="color:#b07fe0;">Moon<span class="planet-sym">☽</span></div><div class="planet-rules">Rules: Emotions & Cycles</div></div>
+    <div class="planet-row" onclick="activatePlanetByKey(this,'moon')">
+      <div><div class="planet-nm" style="color:#b07fe0;">Moon<span class="planet-sym">&#9789;</span></div><div class="planet-rules">Rules: Emotions &amp; Cycles</div></div>
       <div><div class="planet-wkt-name">Cyclical Training</div><div class="planet-wkt-desc" style="color:#c8c4dc;">Adapts week-by-week to your emotional and physical energy levels. The Moon rewards those who listen to their body's rhythm.</div></div>
-      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot"></div><div class="idot"></div><span class="int-label">3/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate →</div></div>
+      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot"></div><div class="idot"></div><span class="int-label">3/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate &#8594;</div></div>
     </div>
-    <div class="planet-row" onclick="activatePlanet(this,'Jupiter','♃','#4fc4cf','Progressive Overload','Always more. Add weight, reps, distance each session. Jupiter blesses those who dare to expand beyond their comfort zone. Growth is the only direction.','Linear periodization · 5×5 strength · Volume cycling · PR tracking · Monthly assessments')">
-      <div><div class="planet-nm" style="color:#4fc4cf;">Jupiter<span class="planet-sym">♃</span></div><div class="planet-rules">Rules: Growth & Expansion</div></div>
+    <div class="planet-row" onclick="activatePlanetByKey(this,'jupiter')">
+      <div><div class="planet-nm" style="color:#4fc4cf;">Jupiter<span class="planet-sym">&#9795;</span></div><div class="planet-rules">Rules: Growth &amp; Expansion</div></div>
       <div><div class="planet-wkt-name">Progressive Overload</div><div class="planet-wkt-desc" style="color:#c8c4dc;">Always adding more: weight, reps, distance. Jupiter rewards those who dare to grow beyond yesterday's limits.</div></div>
-      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot"></div><span class="int-label">4/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate →</div></div>
+      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot"></div><span class="int-label">4/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate &#8594;</div></div>
     </div>
-    <div class="planet-row" onclick="activatePlanet(this,'Saturn','♄','#7a7590','The Long Game','12-week structured programs. No shortcuts. No excuses. Saturn doesn't care about motivation — it demands discipline. Show up every day or don't show up at all.','Structured 12-week blocks · Periodized strength · Discipline tracking · Zero-excuse protocols')">
-      <div><div class="planet-nm" style="color:#7a7590;">Saturn<span class="planet-sym">♄</span></div><div class="planet-rules">Rules: Discipline</div></div>
+    <div class="planet-row" onclick="activatePlanetByKey(this,'saturn')">
+      <div><div class="planet-nm" style="color:#7a7590;">Saturn<span class="planet-sym">&#9796;</span></div><div class="planet-rules">Rules: Discipline</div></div>
       <div><div class="planet-wkt-name">The Long Game</div><div class="planet-wkt-desc" style="color:#c8c4dc;">12-week structured programs, no shortcuts, no excuses. Saturn transforms average athletes into legends through relentless discipline.</div></div>
-      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><span class="int-label">5/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate →</div></div>
+      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><span class="int-label">5/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate &#8594;</div></div>
+    </div>
+    <div class="planet-row" onclick="activatePlanetByKey(this,'mercury')">
+      <div><div class="planet-nm" style="color:#60d0a0;">Mercury<span class="planet-sym">&#9791;</span></div><div class="planet-rules">Rules: Speed &amp; Coordination</div></div>
+      <div><div class="planet-wkt-name">Mind-Body Connection</div><div class="planet-wkt-desc" style="color:#c8c4dc;">Agility, speed, and coordination drills that sharpen the neural link between mind and movement. Mercury rewards those who think fast and move faster.</div></div>
+      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot"></div><div class="idot"></div><span class="int-label">3/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate &#8594;</div></div>
+    </div>
+    <div class="planet-row" onclick="activatePlanetByKey(this,'uranus')">
+      <div><div class="planet-nm" style="color:#7ec8e3;">Uranus<span class="planet-sym">&#9797;</span></div><div class="planet-rules">Rules: Revolution &amp; Change</div></div>
+      <div><div class="planet-wkt-name">Shock the System</div><div class="planet-wkt-desc" style="color:#c8c4dc;">Radical movement disruption - no two sessions alike. Uranus tears down plateaus by smashing every pattern your body has grown comfortable with.</div></div>
+      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot on"></div><div class="idot"></div><span class="int-label">4/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate &#8594;</div></div>
+    </div>
+    <div class="planet-row" onclick="activatePlanetByKey(this,'neptune')">
+      <div><div class="planet-nm" style="color:#4a7fc1;">Neptune<span class="planet-sym">&#9798;</span></div><div class="planet-rules">Rules: Flow &amp; Transcendence</div></div>
+      <div><div class="planet-wkt-name">Flow State Protocol</div><div class="planet-wkt-desc" style="color:#c8c4dc;">Long, meditative movement sessions - swimming, zone-2 cardio, fluid flows. Neptune dissolves resistance and guides you into effortless motion.</div></div>
+      <div><div class="intensity-dots"><div class="idot on"></div><div class="idot on"></div><div class="idot"></div><div class="idot"></div><div class="idot"></div><span class="int-label">2/5 Intensity</span></div><div class="planet-cta-hint">Tap to activate &#8594;</div></div>
     </div>
     </div>
     <!-- Planet Detail Panel -->
     <div id="planet-detail" style="display:none;max-width:1200px;margin:32px auto 0;background:rgba(10,10,26,0.9);border:1px solid var(--border);padding:40px;position:relative;overflow:hidden;animation:fadeUp 0.5s ease forwards;">
       <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 80% 50%,var(--pd-glow,rgba(201,168,76,0.08)),transparent 60%);"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;">
+      <div class="pd-inner-grid">
         <div>
           <div style="font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">✦ Active Protocol</div>
           <div style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;line-height:1;margin-bottom:4px;" id="pd-planet-name">Mars ♂</div>
@@ -2236,6 +2258,24 @@ renderEnergyHistory();
 // ============================================================
 // PLANET DETAIL PANEL
 // ============================================================
+const planetData = {
+  mars:    { name:'Mars',    sym:'♂', color:'#e05c7a', wktName:'Power Surge Mode',        desc:'Maximum explosive intensity. Compound lifts, battle ropes, sprints. Channel raw aggression into every rep. No rest for the warrior planet.',                                                            exercises:'Barbell deadlifts · Battle ropes · Box jumps · Sprint intervals · Heavy compound sets' },
+  venus:   { name:'Venus',   sym:'♀', color:'#e8c97a', wktName:'Flow & Restore',           desc:"Grace over force. Barre, slow yoga flows, foam rolling rituals. Beauty is the goal — move with intention and let recovery become an art form.",                                                         exercises:'Barre class · Yin yoga · Foam rolling · Face yoga · Gentle Pilates' },
+  sun:     { name:'Sun',     sym:'☉', color:'#f0a040', wktName:'Radiant Core Protocol',    desc:'Shine from your center outward. Core work, spine alignment, posture training. The Sun demands you stand tall in your power.',                                                                           exercises:'Pilates core series · Spine articulation · Posture holds · Plank variations · Back extensions' },
+  moon:    { name:'Moon',    sym:'☽', color:'#b07fe0', wktName:'Cyclical Training',         desc:"Honor your body's lunar rhythm. Intensity adapts weekly — build during waxing, peak at full, restore during waning. Work with your cycle, not against it.",                                           exercises:'Week 1: light mobility · Week 2: building strength · Week 3: peak intensity · Week 4: deload & restore' },
+  jupiter: { name:'Jupiter', sym:'♃', color:'#4fc4cf', wktName:'Progressive Overload',     desc:"Always more. Add weight, reps, distance each session. Jupiter blesses those who dare to expand beyond their comfort zone. Growth is the only direction.",                                              exercises:'Linear periodization · 5×5 strength · Volume cycling · PR tracking · Monthly assessments' },
+  saturn:  { name:'Saturn',  sym:'♄', color:'#7a7590', wktName:'The Long Game',            desc:"12-week structured programs. No shortcuts. No excuses. Saturn doesn't care about motivation — it demands discipline. Show up every day or don't show up at all.",                                     exercises:'Structured 12-week blocks · Periodized strength · Discipline tracking · Zero-excuse protocols' },
+  mercury: { name:'Mercury', sym:'☿', color:'#60d0a0', wktName:'Mind-Body Connection',     desc:'Swift, agile, precise. Coordination drills, agility ladders, breathwork, and mental training. Mercury sharpens the communication between brain and muscle.',                                          exercises:'Agility ladder drills · Jump rope intervals · Coordination circuits · Breathwork sets · Speed drills' },
+  uranus:  { name:'Uranus',  sym:'♅', color:'#7ec8e3', wktName:'Shock the System',         desc:"Radical pattern disruption. Every session is different — unexpected supersets, unfamiliar movements, random intensity spikes. Uranus breaks all your routines on purpose.",                           exercises:'Random exercise generator · Shock supersets · Contrast training · Unconventional implements · Chaos intervals' },
+  neptune: { name:'Neptune', sym:'♆', color:'#4a7fc1', wktName:'Flow State Protocol',      desc:"Surrender to the movement. Long-duration low-intensity cardio, swimming, fluid bodyweight flows, sound-bath recovery. Neptune dissolves the ego so the body can heal.",                             exercises:'Open water swimming · Long zone-2 runs · Fluid bodyweight flows · Sound bath recovery · Ocean breathing' },
+};
+
+function activatePlanetByKey(row, key) {
+  const p = planetData[key];
+  if (!p) return;
+  activatePlanet(row, p.name, p.sym, p.color, p.wktName, p.desc, p.exercises);
+}
+
 function activatePlanet(row, name, sym, color, wktName, desc, exercises) {
   document.querySelectorAll('.planet-row').forEach(r => { r.style.borderColor = ''; r.style.background = ''; });
   row.style.borderColor = color;
