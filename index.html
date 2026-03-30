@@ -669,7 +669,9 @@ body { transition: background-color 0.7s ease; }
   nav { padding:14px 20px; }
   .nav-links { display:none; }
   section,.section-wrap { padding:70px 20px; }
-  footer { flex-direction:column; gap:20px; text-align:center; }
+  footer { display:flex; flex-direction:column; gap:16px; text-align:center; padding:40px 20px; }
+  .footer-links { flex-wrap:wrap; justify-content:center; gap:12px; }
+  .footer-copy { justify-self:unset; }
   .feature-nav { padding:20px; }
 }
 
@@ -752,9 +754,9 @@ body { transition: background-color 0.7s ease; }
   input[type="text"], input[type="email"], input[type="password"], input[type="date"] { font-size: 16px !important; padding: 12px; }
   button, .btn { min-height: 44px; }
   /* Fix ticker margin on small phones */
-  .ticker-wrap { margin-top: 56px; }
+  .ticker-wrap { margin-top: 55px; }
   /* Fix hero */
-  .hero { padding-top: 72px; padding-bottom: 80px; padding-left: 16px; padding-right: 16px; text-align: center; align-items: center; }
+  .hero { padding-top: 96px; padding-bottom: 60px; padding-left: 16px; padding-right: 16px; text-align: center; align-items: center; min-height: auto; justify-content: flex-start; }
   /* Fix Scroll to Explore: force center */
   .hero-scroll { left: 50% !important; right: auto !important; transform: translateX(-50%) !important; align-items: center; }
   /* Challenges: 2 per row on mobile */
@@ -782,9 +784,9 @@ body { transition: background-color 0.7s ease; }
   nav { padding: 12px 16px; }
   section, .section-wrap { padding: 50px 20px; }
   /* Fix ticker margin on mobile - nav is shorter */
-  .ticker-wrap { margin-top: 56px; }
-  /* Fix hero padding on mid phones */
-  .hero { padding-top: 84px; padding-bottom: 56px; }
+  .ticker-wrap { margin-top: 55px; }
+  /* Fix hero padding on mid phones - just clear the nav+ticker height */
+  .hero { padding-top: 100px; padding-bottom: 56px; min-height: auto; justify-content: flex-start; padding-left: 20px; padding-right: 20px; }
   /* Fix Scroll to Explore: center */
   .hero-scroll { left: 50% !important; right: auto !important; transform: translateX(-50%) !important; }
   /* Challenges: 2 per row */
@@ -817,9 +819,19 @@ body { transition: background-color 0.7s ease; }
   /* CTA buttons center */
   .cta-btns { flex-direction: column; align-items: center; gap: 10px; }
   .cta-btns .btn { width: 100%; max-width: 280px; text-align: center; }
+  .cta-section { padding: 80px 20px 60px; }
 
   /* z-mini-grid responsive */
   .z-mini-grid { grid-template-columns: repeat(4, 1fr); }
+
+  /* Footer: stack vertically, wrap links */
+  footer { display:flex; flex-direction:column; align-items:center; gap:14px; padding:36px 20px; }
+  .footer-links { flex-wrap:wrap; justify-content:center; gap:10px; }
+  .footer-copy { justify-self:unset; text-align:center; }
+  .footer-logo { justify-self:unset; }
+
+  /* Rewards panel: don't overlap CTA button */
+  #rewards-panel { right: 8px; top: auto; bottom: 80px; transform: none; }
 }
 </style>
 </head>
