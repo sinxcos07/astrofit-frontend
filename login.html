@@ -548,7 +548,7 @@
 
     setLoading("loginBtn", true);
     try {
-      const res = await fetch(`${API}/api/auth/login`, {
+      const res = await fetch(`${COACH_API}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -574,7 +574,7 @@
 
     setLoading("signupBtn", true);
     try {
-      const res = await fetch(`${API}/api/auth/signup`, {
+      const res = await fetch(`${COACH_API}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
