@@ -56,4 +56,4 @@ AstroFit was built as an experimental project exploring the combination of fitne
 
 ## Author
 
-Developed by sinxcos07
+Developed by Suryansh Sinha (sinxcos07)
